@@ -1,27 +1,16 @@
-# AngularQueryRefetchBug
+# Angular Query Refetch Bug
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+This project is a minimum reproducible example for a bug in Angular Query
 
-## Development server
+## Repro Steps
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1.  There are 2 links on the main page "TestA" and "TestB"
+2.  Click "TestA" to load it's data, then click "TestB" to load it's data
+3.  Go back to the "TestA" link
+4.  You will see that the query is stuck in `isRefetching` state forever
 
-## Code scaffolding
+## Why this happens
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This issue happens when a disabled query is enabled and immediately refetched with the `refetch` method on the query.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The `queryFn` is called properly and the devtools show the query transitioning from refething state to fresh state but the `isRefetching` signal stays on `true`
